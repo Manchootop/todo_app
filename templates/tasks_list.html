@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+{% block content %}
+    <table>
+        <tr>
+            <th>title</th>
+            <th>details</th>
+        </tr>
+
+        {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+
+                <td><a href="{% url 'task-details' task.id %}">view</a></td>
+            </tr>
+
+
+        {% endfor %}
+    </table>
+
+    <br>
+    <button><a href="{% url 'task-create' %}">Create a Task</a></button>
+
+{% endblock %}
