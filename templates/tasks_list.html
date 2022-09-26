@@ -1,16 +1,21 @@
 {% extends "main.html" %}
 {% block content %}
+
     <table>
         <tr>
             <th>title</th>
             <th>details</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
 
         {% for task in tasks %}
             <tr>
-                <td>{{ task.title }}</td>
+                <td>{{ task.title | truncatechars:10 }}</td>
 
                 <td><a href="{% url 'task-details' task.id %}">view</a></td>
+                <td><a href="{% url 'task-edit' task.id %}">change</a></td>
+                <td><a href="{% url 'task-delete' task.id %}">del</a></td>
             </tr>
 
 
@@ -19,5 +24,14 @@
 
     <br>
     <button><a href="{% url 'task-create' %}">Create a Task</a></button>
+    <style>
+    table {
+        font-size: 20px;
+        margin: 10px 10px 10px 10px;
 
+    }
+    td tr {
+        align-content: center;
+    }
+    </style>
 {% endblock %}
