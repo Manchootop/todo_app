@@ -1,12 +1,20 @@
 {% extends "main.html" %}
 {% block content %}
 
+    {% if request.user.is_authenticated %}
+        <p>{{ request.user }}</p>
+        <a href="">Logout</a>
+
+        <hr>
+        <h1>Hello {{ request.user }}</h1>
+    {% else %}
+        <a href="{% url 'login' %}">login</a>
+    {% endif %}
+
+
     <table>
         <tr>
-            <th>title</th>
-            <th>details</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>To Do</th>
         </tr>
 
         {% for task in tasks %}
@@ -25,13 +33,14 @@
     <br>
     <button><a href="{% url 'task-create' %}">Create a Task</a></button>
     <style>
-    table {
-        font-size: 20px;
-        margin: 10px 10px 10px 10px;
+        table {
+            font-size: 20px;
+            margin: 10px 10px 10px 10px;
 
-    }
-    td tr {
-        align-content: center;
-    }
+        }
+
+        td tr {
+            align-content: center;
+        }
     </style>
 {% endblock %}
