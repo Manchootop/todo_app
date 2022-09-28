@@ -9,6 +9,7 @@
         <h1>Hello {{ request.user }}</h1>
     {% else %}
         <a href="{% url 'login' %}">login</a>
+        <a href="{% url 'register' %}">Register</a>
     {% endif %}
 
 
