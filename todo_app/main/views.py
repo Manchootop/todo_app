@@ -1,7 +1,8 @@
-from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.contrib.auth import views as auth_views, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic as views
@@ -15,6 +16,12 @@ class ListTasksView(views.ListView):
     model = Task
     context_object_name = 'tasks'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tasks'] = context['tasks'].filter(user=self.request.user)
+        context['count'] = context['tasks'].filter(complete=False).count()
+        return context
+
 
 class ShowTaskDetailsView(views.DetailView):
     template_name = 'task_details.html'
@@ -25,9 +32,13 @@ class ShowTaskDetailsView(views.DetailView):
 class CreateTaskView(views.CreateView):
     template_name = 'task_create.html'
     model = Task
-    fields = '__all__'
+    fields = ['title', 'description', 'complete']
 
     success_url = reverse_lazy('tasks')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(CreateTaskView, self).form_valid(form)
 
 
 class EditTaskView(views.UpdateView):
@@ -40,15 +51,16 @@ class EditTaskView(views.UpdateView):
 
 class DeleteTaskView(views.DeleteView):
     model = Task
+    template_name = 'task_confirm_delete.html'
     success_url = reverse_lazy('tasks')
 
 
 class LoginView(auth_views.LoginView):
     template_name = 'login.html'
-    fields = '__all__'
     redirect_authenticated_user = True
 
-    success_url = reverse_lazy('tasks')
+    def get_success_url(self):
+        return reverse_lazy('tasks')
 
 
 class RegisterView(views.CreateView, SuccessMessageMixin):
@@ -56,5 +68,4 @@ class RegisterView(views.CreateView, SuccessMessageMixin):
     success_url = reverse_lazy('login')
     form_class = UserRegisterForm
     success_message = "Your profile was created successfully"
-
 
