@@ -6,23 +6,31 @@
         <a href="{% url 'logout' %}">Logout</a>
 
         <hr>
-        <h1>Hello {{ request.user }}</h1>
+
     {% else %}
         <a href="{% url 'login' %}">login</a>
         <a href="{% url 'register' %}">Register</a>
     {% endif %}
 
 
-    <h1>To Do</h1>
+    <h2 style="margin-left: 10px">My To Do list</h2>
+    <br>
 
+    <form action="" method="GET">
+        <input type="text" name="search-area" value="{{ search_input }}">
+        <input type="submit" value="Search">
+    </form>
+    
+    <button style="margin: 10px"><a href="{% url 'task-create' %}">Create a Task</a></button>
 
     {% for task in tasks %}
-
+        <div>
         {{ task.title | truncatechars:10 }}
 
         <a href="{% url 'task-details' task.id %}">view</a>
         <a href="{% url 'task-edit' task.id %}">change</a>
         <a href="{% url 'task-delete' task.id %}">del</a>
+        </div>
     {% empty %}
         <p>You have no to do's</p>
 
@@ -31,7 +39,6 @@
 
 
     <br>
-    <button><a href="{% url 'task-create' %}">Create a Task</a></button>
     <style>
         table {
             font-size: 20px;
